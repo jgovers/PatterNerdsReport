@@ -1,0 +1,14 @@
+27nov:
+- planning maken
+- Opdracht begrijpen
+- Hoe onderscheid te maken?
+4dec
+- Data handelen
+- Opzet classifiers voor  beide scenarios
+11dec
+- Werkend algoritme (data in, error uit)
+
+18dec
+- Verbeteren
+- raporteren
+- uitloop
