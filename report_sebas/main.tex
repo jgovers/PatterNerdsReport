@@ -1,0 +1,44 @@
+%% laad alle packages en style-opties in:
+\input{preamble}
+
+%% code for bibliography
+\usepackage{biblatex}
+\usepackage{hyperref}
+\usepackage{setspace}
+\addbibresource{bibr.bib}
+\defbibheading{bibempty}{}
+\hypersetup{hidelinks,colorlinks=false,breaklinks=true,urlcolor=ocre,bookmarksopen=false,pdftitle={Title},pdfauthor={Author}}
+\renewbibmacro*{doi+eprint+url}{%
+  \printfield{isbn}%
+  \newunit\newblock
+  \iftoggle{bbx:doi}
+    {\printfield{doi}%
+     \iffieldundef{doi}{}{\renewcommand*{\finentrypunct}{\relax}}}
+    {}%
+  \newunit\newblock
+  \iftoggle{bbx:eprint}
+    {\usebibmacro{eprint}%
+     \iffieldundef{eprint}{}{\renewcommand*{\finentrypunct}{\relax}}}
+    {}%
+  \newunit\newblock
+  \iftoggle{bbx:url}
+    {\usebibmacro{url+urldate}%
+     \iffieldundef{url}{}{\renewcommand*{\finentrypunct}{\relax}}}
+    {}}
+%% end code for bibliography
+
+\begin{document}
+  \coverpage{Classification of Hand-Written Digits}
+  \pagebreak
+  
+  \section*{Executive Summary}
+Samenvatting over report (weet niet of het er in moet?)
+
+\input{Introduction}
+ 
+  
+
+
+
+
+\end{document}
