@@ -19,13 +19,15 @@ This approach is visualised in figure \ref{fig:case_design}.
 \subsection{Case 1}
 \label{sec:Case1}
 \textbf{Case Summary:} Design a system for training on all cheques at once. The system must be able to correctly classify the handwritten digits after being trained on at least 200 objects per class.\\
+\\
+\noindent This case has a lot of data available. A wise choice to start would be to use a pixeldata representation, potentially in combination with some form of feature reduction. \\
 Smag
 
 \subsection{Case 2}
 \label{sec:Case2}
 \textbf{Case Summary:} Design a system for training on each batch of cheques to be processed. The system must be able to correctly classify the handwritten digits after being trained on a maximum of 10 objects per class.\\
 \\
-\noindent The amount of data available in this case poses some restrictions. While a pixel-data representation worked very well in Case 1, it will have too little data to work with in this case.  
+\noindent The amount of data available in this case poses some restrictions. While a pixel-data representation worked very well in Case 1, it will have too little data to work with in this case. Some more prior knowledge is needed to handle these batches of cheques. One way of doing this is by letting the system recognize certain distinct properties of the digits. A straight-forward way of doing this is by using a feature representation of the objects. A more abstract way is using a dissimilarity representation.
 \\
 \subsubsection*{Representation by Features}
 To start out, features were chosen as the best representation for this case. The function \texttt{im\_features} from the prtools-toolbox was used to compute 14 different features of all the images in the pre-processed database. Because the this amount of features is relatively high compared to the amount of data that is used, some form of feature reduction needs to by applied. MatLab's forward feature selection (\texttt{featself}) was used initially to get a sense for the features that should be used and the features that could be omitted. This was done for four cases; with and without scaling of the data, and with and without implementing a separate test-set in the \texttt{featself} function. The resulting performance can be seen in figure \ref{fig:featsel_perf}
@@ -52,3 +54,4 @@ Next, for the LDC classifier only, each possible combination of 10 features was 
 \end{figure}
 \noindent At this time, the complete system consisted of a Linear Classifier (LDC) trained on the dataset from which 10 features were selected. Sadly though, testruns of the algorithm yielded an error of 30\%. Since this was too low to meet the requirements, a different approach was taken. \\
 \subsubsection*{Representation by Dissimilarity}
+Going back to the theory, 
