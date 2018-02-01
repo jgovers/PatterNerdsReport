@@ -1,22 +1,34 @@
 \section{Conclusion and Discussion}
 \label{sec:DiscConcl}
+\subsection{Performance of Classifiers for both cases}
+The performance of the classifiers for both cases, and their shortcomings, will be sumarized in this section. \\
+\subsubsection*{Case 1}
+For Case 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset (representing the objects with pixels) whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
+Although this result is more than sufficient, some improvements could be made. When investigating scenario 1, PCA turned out to interfere dramatically with the performance of the Parzen classifier. This effect cannot be explained by the authors and warrants further research. \\
+Furthermore, a brief look was given dissimilarity measures. Results were promising, but could not be pursued further in the interest of time. Testing the classifiers for different dissimilarity measures and using meticulously chosen prototypes might have improved the error rates, maybe beyond the results obtained using the pixel representation. \\
 
-For Case 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
-For Case 2, \\
-
-
-
-for the support vector classifier, only polynomial kernels were tried. Different kernels might have produced a different (better) result. Especially an advanced kernel like the ‘tangent distance kernel’, which incorporates rotation- and scaling insensitivity, might have improved the error rate.\\
-prototypes vastzetten! dus wel  kiezen, en dan je batch daar steeds mee vergelijken.
-\\
-SVM for pixeldata rep: could have investigated more Kernels?
-\\
-\noindent For both cases the set criterions were met, but various possibilities for improvement remain. To start with the image preprocessing, the size of the images was chosen to be 16x16 pixels. This choice was motivated by the wish to reduce the runtimes of the algorithms. The effect of using differently resized images for training could be investigated in the future. It seems logical that using larger, more detailed images, could improve classification up to a certain point. Similarly with the value for the Gauss filter: it was chosen to be 0.8 using visual inspection of the resulting images, but this value was not optimized considering the error rates of the classifiers. \\
-Besides, when investigating scenario 1, PCA turned out to interfere dramatically with the performance of the Parzen classifier. This effect cannot be explained by the authors and warrants further research. \\
-In the interest of time, support vector machines were not considered in this report. According to the literature they offer a promising prospect for classifying in high dimensional spaces, which would be a major advantage especially when using the pixel representation. For scenario 1, a brief look was given dissimilarity measures. Results were promising, but could not be pursued further, because the workings of this method were only presented to us in the very last lecture, leaving no time to investigate them thoroughly in between exams for other subjects. Testing the classifiers for different dissimilarity measures and using meticulously chosen prototypes might have improved the error rates, maybe beyond the results attained using the pixel representation.
+\subsubsection*{Case 2}
+For Case 2, the recommended classifier is a Linear Discriminant classifier trained on the dissimilarity-representation dataset (using all objects as prototypes) that has its features reduced to 29 by means of PCA. 10 objects per class were used to train this classifier (100 objects) and the remaining 990 per class were used to test on. The error rate was determined to be 0.2184 with a standard deviation of 0.0179. The benchmark test (using \texttt{NIST\_eval.m}) yields an error rate of 0.194\\
+Although this result is sufficient, improvements could be made to make it more usable. One major improvement could be made by allowing the design to incorporate a set of prototypes, in stead of using the data in each batch. One could argue that this goes against the description for Case 2, but training will still involve each new batch. The major advantage of providing prototypes, is that they can be carefully selected to incorporate a wide variety of digits. This will yield a robust and versatile classifier. An alternative approach would be to incorporate a GUI, from which prototypes can be selected by hand for each batch. \\
+Another point of interest in the design of Case 2, is the Support Vector classifier. For this classifier, only polynomial kernels were tried. Different kernels might have produced a different (better) result. Especially an advanced kernel like the ‘tangent distance kernel’, which incorporates rotation- and scaling insensitivity, could have improved the error rate.\\
 
 
+\noindent For both cases the set criterions were met, but various possibilities for overall improvement remain. In the interest of time, support vector machines were not considered in this report, due to the long time the take to calculate the classifier. According to the literature, they offer a promising prospect for classifying in high dimensional spaces, which would be a major advantage especially when using the pixel \todo{Ik denk er over om dit stuk er uit te halen, eensch?} representation.
 
+\subsection{Usefullness of the pre-processing}
+Finally, the image processing part of the presented algorithms needs to be evaluated. The classifiers for both cases were trained again, this time on a dataset without blob-removal and Gaussian smoothing (note that in case 1 there was also no blob-removing during the normal training, due to a large computation time.). The results are shown in table \ref{tab:improsconc}.
+\begin{table}[H]
+	\centering
+	\caption{Estimated errors of the used classifiers for both cases, with and without the image processing.}
+	\label{tab:improsconc}
+	\begin{tabular}{l|l|ll}
+		& Classifier                                                                                    & \begin{tabular}[c]{@{}l@{}}Error with \\ pre-processing\end{tabular} & \begin{tabular}[c]{@{}l@{}}Error without \\ pre-processing\end{tabular} \\ \hline
+		Case 1 & \begin{tabular}[c]{@{}l@{}}Combination of ParzenC with QDC \\ (with PCA applied)\end{tabular} & 0.0219                                                               & 0.0309                                                                  \\
+		Case 2 & LDC (with PCA applied)                                                                        & 0.2184                                                               & 0.2550                                                                 
+	\end{tabular}
+\end{table}
+\noindent In both cases, implementation of the image processing makes the classifier perform better. In Case 1 this is only slightly better, and absence of the image processing still yields an error below the desired value, but in Case 2 the difference is larger. There, the absence of image processing results in a classifier performing worse than desired. \\
+Some optimization could be done however. To start, the size of the images was chosen to be 16x16 pixels. This choice was motivated by the wish to reduce the runtimes of the algorithms. The effect of using differently resized images for training could be investigated in the future. It seems logical that using larger, more detailed images, could improve classification up to a certain point. Similarly with the value for the Gauss filter: it was chosen to be 0.8 using visual inspection of the resulting images, but this value was not optimized considering the error rates of the classifiers. \\
 
 
 \section{Recommendations}
