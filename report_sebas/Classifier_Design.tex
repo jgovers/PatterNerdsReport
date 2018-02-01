@@ -1,7 +1,7 @@
 \section{Classifier Design Process}
 \label{sec:ClasDes}
 As stated in the introduction, a classifier had to be build for two different cases. For both cases, a similar design approach was used. \begin{enumerate}
-	\item Investigate amount of data and use the theory to choose an initial representation method
+	\item Investigate the amount of data and use the theory to choose an initial representation method
 	\item Train simple classifiers based on the chosen representation method
 	\item Perform evaluation
 	\item If the performance does not meet the requirements, go back to the theory
@@ -14,7 +14,7 @@ This approach is visualised in figure \ref{fig:case_design}.
 	\caption{Design-process to determine the best representation method for each of the two cases described in the Introduction.}
 	\label{fig:case_design}
 \end{figure}
-\noindent The image processing described in chapter \ref{sec:ImPros} was kept the same for both cases, since it is a very subtle processing and will benefit all potential methods.
+\noindent The image processing described in chapter \ref{sec:ImPros} was kept the same for both cases, with exception of the blob removal in Case 1, because it would take up too much time (see section \ref{sec:Case1} and the recommendations in section \ref{sec:recom} for a more detailed explanation).   The rest of the pre-processing is a very subtle processing and will benefit all potential methods.
 
 \newpage
 \section{Case 1}
@@ -186,10 +186,33 @@ featsellr en PCA geprobeerd. wordt slechter. qdc nog slechter.
 bla
 
 \subsection{Representation by Pixels}
-bla
+Using the pixel representation gives a high dimensionality (16x16=256). The combination of high dimensionality and low training set size suggests that usage of density estimating classifiers can be ruled out in advance. More promising is the use of support vector classifiers, a nearest mean classifier, and perhaps a linear classifier. In table \ref{tab:5er} the estimated error of 5 classifiers is shown. This error was averaged over 10 training sets of 10 objects per class, and tested using a test set containing the other 900 objects of each class. The standard deviation over different training sets is shown in the table as well. The SVC does not perform as well as expected, maybe another kernel would yield a better result.
+\begin{table}[H]
+	\centering
+	\caption{Estimated error of five classifiers for a pixel-representation. The shown error is the average of 10 runs.}
+	\label{tab:5er}
+	\begin{tabular}{l|lllll}
+		Classifier         & NMC    & \begin{tabular}[c]{@{}l@{}}SVC \\ (linear)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC \\ (polynomial kernel 2)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC \\ (polynomial kernel 3)\end{tabular} & FisherC \\ \hline
+		Error              & 0.2676 & 0.3203                                                  & 0.3245                                                               & 0.3303                                                               & 0.5313  \\
+		Standard deviation & 0.0182 & 0.0433                                                  & 0.0499                                                               & 0.0325                                                               & 0.0398 
+	\end{tabular}
+\end{table}
+\noindent The huge dimensionality compared to training set size calls for feature reduction. Using PCA preserving 90\% of the variance, the dimensionality was reduced to approximately 20. The results can be seen in table \ref{tab:5erpca}. This decreases the error for the NMC slightly, increases the error for the SVC, and decreases the error for the FisherC dramatically.
+\begin{table}[H]
+	\centering
+	\caption{Estimated error of five classifiers for a pixel-representation, using a PCA to reduce the amount of features. The shown error is the average of 10 runs.}
+	\label{tab:5erpca}
+	\begin{tabular}{l|lllll}
+		Classifier         & NMC    & \begin{tabular}[c]{@{}l@{}}SVC \\ (linear)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC \\ (polynomial kernel 2)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC\\  (polynomial kernel 3)\end{tabular} & FisherC \\ \hline
+		Error              & 0.2631 & 0.3247                                                  & 0.3742                                                               & 0.3661                                                               & 0.2671  \\
+		Standard deviation & 0.0179 & 0.0243                                                  & 0.0528                                                               & 0.0477                                                               & 0.0181 
+	\end{tabular}
+\end{table}
+
 
 \subsubsection*{Preliminary Conclusion}
-bla
+The best classifier using the pixel representation seems to be the nearest mean classifier, after applying PCA to reduce the dimensionality. The resulting error is approximately 0.2631, with a standard deviation of 0.0179. The classifier is fairly stable over different training sets, but it does not perform well enough to pass the threshold.
+
 
 \subsection{Final Conclusion and Evaluation for Case 2}
 \begin{table}[H]
@@ -198,7 +221,7 @@ bla
 	\label{tab:concase1}
 	\begin{tabular}{l|ll}
 		Representation  & Best Classifier               & Estimated Error \\ \hline
-		Pixeldata       &  &           \\
+		Pixeldata       & NMC with PCA &   0.2631        \\
 		Features        & LDC with 10 out of 14 selected features                      & 0.30          \\
 		Dissimilarities &                            &          
 	\end{tabular}

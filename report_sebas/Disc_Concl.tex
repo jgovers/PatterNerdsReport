@@ -4,6 +4,8 @@
 For scenario 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
 For scenario 2, ....... \\
 \\
+SVM for pixeldata rep: could have investigated more Kernels?
+\\
 \noindent For both cases the set criterions were met, but various possibilities for improvement remain. To start with the image preprocessing, the size of the images was chosen to be 16x16 pixels. This choice was motivated by the wish to reduce the runtimes of the algorithms. The effect of using differently resized images for training could be investigated in the future. It seems logical that using larger, more detailed images, could improve classification up to a certain point. Similarly with the value for the Gauss filter: it was chosen to be 0.8 using visual inspection of the resulting images, but this value was not optimized considering the error rates of the classifiers. \\
 Besides, when investigating scenario 1, PCA turned out to interfere dramatically with the performance of the Parzen classifier. This effect cannot be explained by the authors and warrants further research. \\
 In the interest of time, support vector machines were not considered in this report. According to the literature they offer a promising prospect for classifying in high dimensional spaces, which would be a major advantage especially when using the pixel representation. For scenario 1, a brief look was given dissimilarity measures. Results were promising, but could not be pursued further, because the workings of this method were only presented to us in the very last lecture, leaving no time to investigate them thoroughly in between exams for other subjects. Testing the classifiers for different dissimilarity measures and using meticulously chosen prototypes might have improved the error rates, maybe beyond the results attained using the pixel representation.
@@ -13,6 +15,7 @@ In the interest of time, support vector machines were not considered in this rep
 
 
 \section{Recommendations}
+\label{sec:recom}
 
 When continuing designing the digit classification system for the purpose of classifying bank cheques, the following points are worth taking a closer look at. 
 \begin{itemize}
