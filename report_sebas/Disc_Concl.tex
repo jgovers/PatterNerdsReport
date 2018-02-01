@@ -1,7 +1,18 @@
-\section{Discussion and Conclusion}
+\section{Conclusion and Discussion}
 \label{sec:DiscConcl}
 
-Sebas en Allemaal
+For scenario 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
+For scenario 2, ....... \\
+\\
+\noindent For both cases the set criterions were met, but various possibilities for improvement remain. To start with the image preprocessing, the size of the images was chosen to be 16x16 pixels. This choice was motivated by the wish to reduce the runtimes of the algorithms. The effect of using differently resized images for training could be investigated in the future. It seems logical that using larger, more detailed images, could improve classification up to a certain point. Similarly with the value for the Gauss filter: it was chosen to be 0.8 using visual inspection of the resulting images, but this value was not optimized considering the error rates of the classifiers. \\
+Besides, when investigating scenario 1, pca turned out to interfere dramatically with the performance of the Parzen classifier. This effect cannot be explained by the authors and warrants further research. \\
+In the interest of time, support vector machines were not considered in this report. According to the literature they offer a promising prospect for classifying in high dimensional spaces, which would be a major advantage especially when using the pixel representation. For scenario 1, a brief look was had at dissimilarity measures. Results were promising, but could not be pursued further, because the workings of this method were only presented to us in the very last lecture, leaving no time to investigate them thoroughly in between exams for other subjects. Testing the classifiers for different dissimilarity measures and using meticulously chosen prototypes might have improved the error rates, maybe beyond the results attained using the pixel representation.
+
+
+
+
+
+\section{Recommendations}
 
 Include a section Recommendations to your report, in which you advise your client in detail on possible steps to improve performance in light of the overall system they are constructing. \\
 For example:\\
@@ -11,3 +22,13 @@ does the application require reject options? \\
 does a single classifier suffice for all digits on a bank cheque? \\
 what is the role of time constraints?
 
+\begin{itemize}
+	\item \textit{Implement a reject option:} Especially when dealing with important interactions like bank cheques, any mistake made by the system may be a costly one. It is possible to lower the error rate further by implementing a reject option. This means that the system will abstain from making a definitive decision when the digit cannot be classified with a certainty above a certain threshold. After a digit is rejected several continuations are possible: the cheque containing a rejected digit can then be handled by human employees, or the submitter of the cheque can be contacted automatically, for example.	
+	\item \textit{Discontinue case 2 classification:} In case 2, a new classifier is trained for every batch of cheques to be processed. It seems difficult to come up with a real world scenario in which this would be an efficient procedure. A large training set containing handwritten digits is available, which makes it possible to create a classifier with an error rate below 3\%. This classifier can easily be used for all batches of cheques, without adaptation problems. To keep the classifier up to date with handwriting trends it can be retrained after a certain amount of time. 
+	Training a new classifier for every batch delivers an error rate close to 20\%. Practically all submitted cheques would suffer misclassification in several digits. Discontinuation of this procedure should therefore be considered.
+	
+	\item \textit{Investigate adding extra features:} The image analysis toolbox used in this report produces at most 14 useable features. This turned out to be insufficient to reach the thresholds set for the error rate. If the dimensionality of the feature space could be enlarged, this might benefit the performance of the classifiers (for case 1 in particular). Investigating ways to extract more features from the given images might turn out to be beneficial. Classifying using feature representation might be able to compete with the pixel data approach.
+	\item \textit{Investigate combining different representations:} The possibility to combine classifiers was considered in this report, but not the combination of different representations. Possibilities for combining classifiers are endless, because not only to classifiers to combine, but also the combining rule can be modified (product, max, min, etc.). Combining a classifier which is able to classify ‘8’ and ‘9’ using features or dissimilarities, with the classifiers described above using the pixel data approach, might further decrease the error rate. 
+	\item \textit{}
+	\item \textit{}
+\end{itemize}
