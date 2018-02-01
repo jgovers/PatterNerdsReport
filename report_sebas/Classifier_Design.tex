@@ -176,14 +176,53 @@ Next, for the LDC classifier only, these 10 features were tested on different da
 \noindent At this time, the complete system consisted of a Linear Classifier (LDC) trained on the dataset from which 10 out of 14 features were selected. Sadly though, testruns of the algorithm yielded an error of 30\%, as can be seen in figure \ref{fig:feat_jumps}. Since this is too low to meet the requirements, a different approach was taken. \\
 
 \subsection{Representation by Dissimilarity}
-It was decided that more information needed to be intrinsic in the system in order for it to be able to correctly classify the digits with the small trainingset Case 2 provides. Going back to the theory, dissimilarity-representation seemed to be able to do this. By picking a few representative examples of each digit by hand (the prototypes) and calculating the distance of the remaining objects to these prototypes, correct classification should be possible. \\
-\noindent To get a first test of this principle, it was tried to first filter out all the zeros. 90 samples per class were taken, three representative zeros were choosen, and the distance between all objects and these three zeros was calculated using MatLab's \texttt{proxm.m} function. In figure \todo{INSERT FIGURE waar die zeros goed geseparate zijn! misschien ff met maar 10 per class, zoals deze case voorschrijft.} a clear grouping of all the zeros can be observed, and this group can be separated from the rest of the objects easily. This was done for various distance measures. City-blok distance seemed to give the best result. \todo{tabelletje met andere distance measures waaruit blijkt dat dit inderdaad zo is? er schijnt ook een paper te zijn, even naar verwijzen. VERWIJZEN NAAR PAPER, en zeggen dat het in image goed werkt} \\
-\noindent The next step is to try this with every digit. Ten samples per class were taken, and in stead of selecting the prototypes manually, all objects were given as prototypes. This meant a dataset of 100 samples, each of them having 100 features. With this, an error of below 25 percent was reached. \todo{ldc word getrained. QDC ook. vergelijking: QDC was beduidend slechter.} \\
-\noindent The created dataset is very large however, so feature reduction might be in place. 
-featsellr en PCA geprobeerd. wordt slechter. qdc nog slechter. 
+It was decided that more information needed to be intrinsic in the system in order for it to be able to correctly classify the digits with the small trainingset Case 2 provides. Going back to the theory, dissimilarity-representation seemed to be able to do this. By picking a certain amount of representative examples of each digit by hand (the prototypes) and calculating the distance of the remaining objects to these prototypes, correct classification should be possible. \\
+\noindent To get an initial idea of the performance of this method, it was first tested whether or not it performed well on the classification of a single class. 90 samples per class were taken, two representative 'ones' were chosen, and the distance between all objects and these twee 'ones' was calculated using MatLab's \texttt{proxm} function. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{images/dissim_two_ones.jpg}
+	\caption{Dissimilarity of 90 samples per class to two digit-one prototypes, using city-block distances.}
+	\label{fig:dissim_two_ones}
+\end{figure}
+\noindent In figure \ref{fig:dissim_two_ones} a clear clustering of all the 'ones' can be observed, and this cluster can be separated from the rest of the objects easily using a linear classifier (for instance LDC).\\
+The next step is to get a sense of the optimal distance measure to use with \texttt{proxm}. The estimated error of the LD-classifier was determined for various distance measures. As can be seen in figure \ref{fig:dissim_bar_dist} a few distance measures perform comparable. City-block seemed to be the most consistent over different training sets, so this distance measure was chosen. \todo{VERWIJZEN NAAR PAPER, en zeggen dat het in image goed werkt} \\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{images/dissim_bar_dist.jpg}
+	\caption{Estimated error of \texttt{LDC} using different distance measures.}
+	\label{fig:dissim_bar_dist}
+\end{figure}
 
+\noindent This method now has to be scaled up for every class. At the same time, it was realised that manually picking prototypes in Case 2 might not be the best option. This manual selection has to be done for each batch of cheques, through some sort of Graphical User Interface. It was decided to give all objects as prototypes, and try to reduce the resulting amount of features by means of PCA. Ten samples per class were taken. This meant a dataset of 100 samples, each of them having 100 features. Initially, LDC was chosen as the classifier separating the 'ones' from the other digits, but for all classes there might be an other optimal one. Different classifiers were trained after performing PCA of different resulting dimensionality on the dataset (dimensionality of 100 means keeping 100 features, so essentially not performing PCA). The results can be seen in table \ref{tab:dissim_all_class} and in figure \ref{fig:dissim_all_class}.
+\begin{table}[H]
+	\centering
+	\caption{Estimated errors for different classifiers, with and without the use of PCA. In the case of PCA, the dimension in which the lowest error is attained is given in the last column.}
+	\label{tab:dissim_all_class}
+	\begin{tabular}{l|lll}
+		Classifier & Without PCA & With PCA & Dimensionality PCA reduces to (lowest error) \\ \hline
+		LDC        & 0.243       & 0.2137   & 27                                           \\
+		QDC        & 0.9         & 0.4228   & 16                                           \\
+		SVC        & 0.2789      & 0.2754   & 80                                           \\
+		ParzenC    & 0.2707      & 0.2691   & 32                                           \\
+		NMC        & 0.3948      & 0.3947   & 69                                           \\
+		kNNC       & 0.3242      & 0.2739   & 54                                          
+	\end{tabular}
+\end{table}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{images/dissim_all_class.jpg}
+	\caption{Estimated error of different classifiers, using PCA resulting in different amounts of dimensions.}
+	\label{fig:dissim_all_class}
+\end{figure}
+\noindent Because of the high dimensionality of the feature space and the relative low amount of samples, the more complex classifiers tend to overtrain. This supports the earlier assumption of a linear classifier. LDC seems to give the lowest error, both with and without PCA. To find out which one of these performs best, both were trained 10 times on a dataset of 10 objects per class, after which they were tested on the remaining 990 objects per class. The results for LDC including all feature reductions (using PCA) and the unaltered LDC are shown in figure \ref{fig:dissim_ldc_mean}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{images/dissim_ldc_mean.jpg}
+	\caption{Average error of ten test stets of \texttt{ldc}.}
+	\label{fig:dissim_ldc_mean}
+\end{figure}
 \subsubsection*{Preliminary Conclusion}
-bla
+The best performing Classifier using a dissimilarity-representation is an Linear Discriminant Classifier, trained on a dissimilarity-set from which 29 features are extracted using PCA. This classifier has a mean error of 0.2184 with a standard deviation of 0.0002348.
 
 \subsection{Representation by Pixels}
 Using the pixel representation gives a high dimensionality (16x16=256). The combination of high dimensionality and low training set size suggests that usage of density estimating classifiers can be ruled out in advance. More promising is the use of support vector classifiers, a nearest mean classifier, and perhaps a linear classifier. In table \ref{tab:5er} the estimated error of 5 classifiers is shown. This error was averaged over 10 training sets of 10 objects per class, and tested using a test set containing the other 900 objects of each class. The standard deviation over different training sets is shown in the table as well. The SVC does not perform as well as expected, maybe another kernel would yield a better result.
@@ -205,7 +244,7 @@ Using the pixel representation gives a high dimensionality (16x16=256). The comb
 	\begin{tabular}{l|lllll}
 		Classifier         & NMC    & \begin{tabular}[c]{@{}l@{}}SVC \\ (linear)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC \\ (polynomial kernel 2)\end{tabular} & \begin{tabular}[c]{@{}l@{}}SVC\\  (polynomial kernel 3)\end{tabular} & FisherC \\ \hline
 		Error              & 0.2631 & 0.3247                                                  & 0.3742                                                               & 0.3661                                                               & 0.2671  \\
-		Standard deviation & 0.0179 & 0.0243                                                  & 0.0528                                                               & 0.0477                                                               & 0.0181 
+		Standard deviation & 0.0179 & 0.0243                                 &  0.0528                                                               & 0.0477                                                               & 0.0181 
 	\end{tabular}
 \end{table}
 
@@ -215,14 +254,17 @@ The best classifier using the pixel representation seems to be the nearest mean 
 
 
 \subsection{Final Conclusion and Evaluation for Case 2}
+As can be seen in table \ref{tab:concase2}, A Linear Discriminant Classifier with a PCA reducing the feature space to 29 features has the best performance out of all methods that were tried.
 \begin{table}[H]
 	\centering
 	\caption{Overview of the best performing classifiers per representation, and their errors.}
-	\label{tab:concase1}
+	\label{tab:concase2}
 	\begin{tabular}{l|ll}
 		Representation  & Best Classifier               & Estimated Error \\ \hline
 		Pixeldata       & NMC with PCA &   0.2631        \\
 		Features        & LDC with 10 out of 14 selected features                      & 0.30          \\
-		Dissimilarities &                            &          
+		Dissimilarities & LDC with a PCA reducing to 29 features                       &  0.2184        
 	\end{tabular}
 \end{table}
+\noindent The error of the chosen classifier was determined more accurately by training it ten times on 10 samples per class and testing it on the remaining objects. This way some measure of stability can be given, using the standard deviation between the repetitions. This achieved a mean error rate of 0.2184 with standard deviation 2.3479e-4. The standard deviation is very small, which means the classifier is stable for different test sets (picked at random from the original dataset).\\
+The benchmark test (using \texttt{NIST\_eval.m}) yields an error rate of 0.194 for the chosen classifier for scenario 2. This error is below the desired threshold of 20\%, and also a bit lower than the estimated error.

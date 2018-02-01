@@ -1,8 +1,13 @@
 \section{Conclusion and Discussion}
 \label{sec:DiscConcl}
 
-For scenario 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
-For scenario 2, ....... \\
+For Case 1, the recommended classifier is a Parzen density estimating classifier, combined using the product rule with a quadratic discriminant classifier which is applied to a dataset whose dimensionality is reduced using principle component analysis preserving 90\% of the original variance. All provided data was used to train this classifier (10x1000=10,000 objects). The error rate was determined to be 0.0219 with standard deviation 5.3125e-4 using cross validation. The benchmark test yields an error rate of 0.0260.\\
+For Case 2, \\
+
+
+
+for the support vector classifier, only polynomial kernels were tried. Different kernels might have produced a different (better) result. Especially an advanced kernel like the ‘tangent distance kernel’, which incorporates rotation- and scaling insensitivity, might have improved the error rate.\\
+prototypes vastzetten! dus wel  kiezen, en dan je batch daar steeds mee vergelijken.
 \\
 SVM for pixeldata rep: could have investigated more Kernels?
 \\
