@@ -45,7 +45,7 @@ To start out, features were chosen as the best representation for this case. The
 	\label{fig:feat_bf_error}
 \end{figure}
 \noindent This figure shows the lowest error obtained with a certain amount of features. It suggests the optimal amount is 10. It also shows that the Linear Classifier will probably perform best, although even its best error is not under the 25 percent yet. \\
-\todo{Vanaf hier heb ik de tekst een beetje veranderd}Next, for the LDC classifier only, these 10 features were tested on different datasets. The result of this was a big fluctuation in errors between datasets, which implies that the set of 10 features were only optimal for one particular dataset. Therefore another brute force approach was used to test all possible combinations of 9 to 12 features on different datasets. In figure \ref{fig:feat_jumps} the error of every combination of 9 features can be seen. Very noticeable are the large drops and jumps in the graph, visualised with the orange line below it. After close inspection of the used features at these points, it was discovered that every increase in error corresponded to the same four features being added, namely 'Convex Area', 'Conves Hull', 'Convex Image' and 'Eccentricity'. A similar pattern was recognized in the other results. It was decided to omit these features, leaving the final dataset with the desired amount of 10 features.
+\todo{Vanaf hier heb ik de tekst een beetje veranderd}Next, for the LDC classifier only, these 10 features were tested on different datasets. The result of this was a big fluctuation in errors between datasets, which implies that the set of 10 features were only optimal for one particular dataset. Therefore another brute force approach was used to test all possible combinations of 9 to 12 features on different datasets. In figure \ref{fig:feat_jumps} the error of every combination of 9 features can be seen. Very noticeable are the large drops and jumps in the graph, visualised with the orange line below it. After close inspection of the used features at these points, it was discovered that every increase in error corresponded to the same four features being added, namely 'Convex Area', 'Convex Hull', 'Convex Image' and 'Eccentricity'. A similar pattern was recognized in the other results. It was decided to omit these features, leaving the final dataset with the desired amount of 10 features.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.45]{images/feat_jumps.jpg}
@@ -55,7 +55,37 @@ To start out, features were chosen as the best representation for this case. The
 \noindent At this time, the complete system consisted of a Linear Classifier (LDC) trained on the dataset from which 10 features were selected. Sadly though, testruns of the algorithm yielded an error of 30\%. Since this was too low to meet the requirements, a different approach was taken. \\
 \subsubsection*{Representation by Dissimilarity}
 It was decided that more information needed to be intrinsic in the system in order for it to be able to correctly classify the digits with the small trainingset Case 2 provides. Going back to the theory, dissimilarity-representation seemed to be able to do this. By picking a few representative examples of each digit by hand (the prototypes) and calculating the distance of the remaining objects to these prototypes, correct classification should be possible. \\
-\noindent To get a first test of this principle, it was tried to first filter out all the zeros. 90 samples per class were taken, three representative zeros were choosen, and the distance between all objects and these three zeros was calculated using MatLab's \texttt{proxm.m} function. In figure \todo{INSERT FIGURE waar die zeros goed geseparate zijn! misschien ff met maar 10 per class, zoals deze case voorschrijft.} a clear grouping of all the zeros can be observed, and this group can be separated from the rest of the objects easily. This was done for various distance measures. City-blok distance seemed to give the best result. \todo{tabelletje met andere distance measures waaruit blijkt dat dit inderdaad zo is? er schijnt ook een paper te zijn, even naar verwijzen. VERWIJZEN NAAR PAPER, en zeggen dat het in image goed werkt} \\
-\noindent The next step is to try this with every digit. Ten samples per class were taken, and in stead of selecting the prototypes manually, all objects were given as prototypes. This meant a dataset of 100 samples, each of them having 100 features. With this, an error of below 25 percent was reached. \todo{ldc word getrained. qdc ook. vergelijking: qdc was beduidend slechter.} \\
-\noindent The created dataset is very large however, so feature reduction might be in place. 
-featsellr en PCA geprobeerd. wordt slechter. qdc nog slechter. 
+\noindent To get a first test of this principle, it was tried to first filter out all some digits. 90 samples per class were taken, two representative ones were chosen, and the distance between all objects and these three zeros was calculated using MatLab's \texttt{proxm} function. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{images/dissim_two_ones.jpg}
+	\caption{Dissimilarity of 90 samples per class to two digit-one prototypes, using city-block distances.}
+	\label{fig:dissim_two_ones}
+\end{figure}
+In figure \ref{fig:dissim_two_ones} a clear grouping of all the ones can be observed, and this group can be separated from the rest of the objects easily. This was done for various distance measures. As can be seen in figure \ref{fig:dissim_bar_dist} a few distance measures perform comparable, but city-block seemed to be the most consistent over different training sets. \todo{VERWIJZEN NAAR PAPER, en zeggen dat het in image goed werkt} \\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{images/dissim_bar_dist.jpg}
+	\caption{Error of \texttt{ldc} classifier, using different distance measures.}
+	\label{fig:dissim_bar_dist}
+\end{figure}
+
+\noindent The next step is to try this with every digit. Ten samples per class were taken, and in stead of selecting the prototypes manually, all objects were given as prototypes. This meant a dataset of 100 samples, each of them having 100 features. Now a decision must be made on what classifier to use. Because of the high dimensionality of the feature space and the relative low amount of samples, the more complex classifiers tend to 
+
+fuck up.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{images/dissim_all_class.jpg}
+	\caption{Error of different classifiers, using different orders of PCA.}
+	\label{fig:dissim_all_class}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.9\textwidth]{images/dissim_ldc_mean.jpg}
+	\caption{Average error of ten test stets of \texttt{ldc}.}
+	\label{fig:dissim_ldc_mean}
+\end{figure}
+
+
