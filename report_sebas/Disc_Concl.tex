@@ -52,7 +52,7 @@ When continuing designing the digit classification system for the purpose of cla
 	\item \textbf{Remarks about computation time}
 	\begin{enumerate}
 		\item \textit{Case 1:} For Case 1, once the classifier is trained on the entire dataset, time is not so much an issue. The training of the classifier itself takes a long time though. This is due to the large amount of data, in combination with the relatively cumbersome image processing algorithms in the pre-processing phase. If, for whatever reason, a new classifier has to be trained on a new datafile of numbers, this should be taken into account. \\
-		If the classification itself needs to happen faster, for whatever reason, a (proper) implementation of an SVM might be preferred over ParzenC.
+		If the classification itself needs to happen faster, for whatever reason, a (proper) implementation of an SVM might be preferred over ParzenC. While the training of an SVM might take long, its classification-performance after training is fast.
 		\item \textit{Case 2:} In the instance of Case 2, more could be done to optimize the training of the classifier. Since the classifier is trained for each batch of cheques (and there will presumably be a lot of batches) this will benefit the user. Again, the most time-consuming factor here is the pre-processing. One way to optimize this (and by the way, this will also work for Case 1!) is to incorporate parallel computing in the algorithm, using \texttt{parfor} in stead of \texttt{for} loops. This will spread the calculations over the different cores of the computer, resulting in a much faster runtime.
 	\end{enumerate}
 \end{itemize}
